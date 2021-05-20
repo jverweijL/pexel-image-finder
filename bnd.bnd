@@ -1,0 +1,5 @@
+Bundle-Name: pexel-image-finder
+Bundle-SymbolicName: pexel.image.finder
+Bundle-Version: 1.0.0
+Export-Package: pexel.image.finder.constants
+Import-Package: !org.apache.avalon.framework.logger,!org.apache.log,*
