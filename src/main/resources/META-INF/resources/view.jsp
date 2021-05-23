@@ -2,6 +2,13 @@
 <%@ taglib prefix="clay" uri="http://liferay.com/tld/clay" %>
 <%@ include file="/init.jsp" %>
 
+<aui:script>
+	window.importImage = function(id){
+		document.getElementById('<portlet:namespace/>id').value=id;
+		document.getElementById("<portlet:namespace/>fmimport").submit();
+	}
+</aui:script>
+
 <liferay-portlet:actionURL name="/pexel/import" var="imageimport" />
 <aui:form action="<%= imageimport %>" method="post" name="fmimport">
 	<aui:input name="id" type="hidden" value="-1"/>
@@ -37,7 +44,9 @@
 <div class="pexel-searchresults">
 
 	<c:forEach items="${result}" var="photo">
-		<img src="${photo.getValue()}" data-id="${photo.getKey()}"/>
+		<a href="javascript:void(0)" onclick="importImage('${photo.getKey()}');">
+			<img src="${photo.getValue()}" data-id="${photo.getKey()}"/>
+		</a>
 	</c:forEach>
 
 </div>
