@@ -16,6 +16,9 @@
 
 <liferay-portlet:actionURL name="/pexel/search" var="search" />
 
+<liferay-ui:success key="entryAdded" message="entry-added" />
+<liferay-ui:success  key="entryExists"  message="entry-exists" />
+
 <div class=pexel-searchbar">
 	<aui:form action="<%= search %>" method="post" name="fm">
 		<aui:fieldset cssClass="search-bar mb-3">
@@ -51,9 +54,9 @@
 
 </div>
 
-<a href="https://www.pexels.com">Photos provided by Pexels</a>
+<a href="https://www.pexels.com">Photos provided by Pexels</a><br/>
 
 <a href="https://www.pexels.com">
-	<img src="https://images.pexels.com/lib/api/pexels.png" />
+	<img class="w-25" src="https://images.pexels.com/lib/api/pexels.png" />
 </a>
 

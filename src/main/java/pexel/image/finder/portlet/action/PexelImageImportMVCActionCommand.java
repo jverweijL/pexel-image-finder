@@ -11,9 +11,11 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -48,12 +50,38 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
 
     @Override
     protected void doProcessAction(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
         System.out.println("the import is on...");
         //todo only if it's a logged in user
 
+        // first get info on remote asset
+        String id = URLEncoder.encode(ParamUtil.getString(actionRequest, "id"),"UTF-8");
+
         HttpUriRequest request = RequestBuilder
-                .get("https://images.pexels.com/photos/2014422/pexels-photo-2014422.jpeg")
-                //.addHeader("Authorization", PexelImageFinderPortletKeys.APIKEY)
+                .get("https://api.pexels.com/v1/photos/" + id)
+                .addHeader("Authorization", PexelImageFinderPortletKeys.APIKEY)
+                .build();
+
+        String imgTitle="";
+        String imgUrl = "";
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonResult = mapper.readTree(getRequest(request));
+
+            imgTitle = jsonResult.get("url").asText().replaceFirst("/$","").replaceFirst(".*/","");
+            imgUrl = jsonResult.get("src").get("large").asText();
+
+            System.out.println(imgTitle);
+            System.out.println(imgUrl);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // get the actual image
+        request = RequestBuilder
+                .get(imgUrl)
                 .build();
 
         // first create required folder structure
@@ -77,21 +105,36 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
             System.out.println(folderID);
         }
 
-        // upload file to folder
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = null;
+        // see if file exists already if not we add it otherwise we just show message file already exists
+        //if (DLAppServiceUtil.getFileEntry(themeDisplay.getScopeGroupId(), folderID,"123 bag") == null) {
+
+        boolean fileExists = false;
         try {
-            response = client.execute(request);
-            HttpEntity entity = response.getEntity();
-            if (entity != null && response.getStatusLine().getStatusCode() == 200) {
-                try (InputStream inputStream = entity.getContent()) {
-                    // do something useful with the stream
-                    DLAppServiceUtil.addFileEntry(themeDisplay.getScopeGroupId(), folderID, "123.jpeg", response.getEntity().getContentType().getValue(),
-                            "123 bag", "auto import pexels", "", inputStream, response.getEntity().getContentLength(), serviceContext);
+            // see if file already exists
+            FileEntry f = DLAppServiceUtil.getFileEntry(themeDisplay.getScopeGroupId(), folderID,imgTitle);
+            fileExists = true;
+            SessionMessages.add(actionRequest, "entryExists");
+        } catch (PortalException pe) {
+
+        }
+
+        if (!fileExists) {
+            // upload file to folder
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpResponse response = null;
+            try {
+                response = client.execute(request);
+                HttpEntity entity = response.getEntity();
+                if (entity != null && response.getStatusLine().getStatusCode() == 200) {
+                    try (InputStream inputStream = entity.getContent()) {
+                        DLAppServiceUtil.addFileEntry(themeDisplay.getScopeGroupId(), folderID, "123.jpeg", response.getEntity().getContentType().getValue(),
+                                imgTitle, "auto import pexels", "", inputStream, response.getEntity().getContentLength(), serviceContext);
+                        SessionMessages.add(actionRequest, "entryAdded");
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         //hideDefaultSuccessMessage(actionRequest);
