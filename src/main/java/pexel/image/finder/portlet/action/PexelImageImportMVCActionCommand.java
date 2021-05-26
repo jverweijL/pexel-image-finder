@@ -6,6 +6,7 @@ import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -17,7 +18,9 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,18 +29,24 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import pexel.image.finder.constants.PexelImageFinderPortletKeys;
+import pexel.image.finder.portlet.configuration.PexelImageFinderPortletConfiguration;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 
 @Component(
+        configurationPid = "pexel.image.finder.portlet.configuration.PexelImageFinderPortletConfiguration",
         immediate = true,
         property = {
                 "javax.portlet.name=" + PexelImageFinderPortletKeys.PEXELIMAGEFINDER,
@@ -46,7 +55,17 @@ import java.util.HashMap;
         service = MVCActionCommand.class
 )
 public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
+    //todo make this configurable
     private String PATH = "/images/pexels";
+
+    private volatile PexelImageFinderPortletConfiguration _configuration;
+
+    @Activate
+    @Modified
+    protected void activate(Map<String,Object> properties)
+    {
+        _configuration = ConfigurableUtil.createConfigurable(PexelImageFinderPortletConfiguration.class,properties);
+    }
 
     @Override
     protected void doProcessAction(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
@@ -54,12 +73,20 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
         System.out.println("the import is on...");
         //todo only if it's a logged in user
 
+        String apiKey = "";
+        PortletPreferences preferences = actionRequest.getPreferences();
+        if (Validator.isNotNull(preferences))
+        {
+            apiKey = GetterUtil.getString(preferences.getValue("apiKey","APIKEY_NOT_SET"));
+
+        }
+
         // first get info on remote asset
         String id = URLEncoder.encode(ParamUtil.getString(actionRequest, "id"),"UTF-8");
 
         HttpUriRequest request = RequestBuilder
                 .get("https://api.pexels.com/v1/photos/" + id)
-                .addHeader("Authorization", PexelImageFinderPortletKeys.APIKEY)
+                .addHeader("Authorization", apiKey)
                 .build();
 
         String imgTitle="";
