@@ -13,12 +13,12 @@
 
     <div class="portlet-configuration-body-content">
         <div class="container-fluid">
-            <%--<p>Do whatever you want todo here.</p>--%>
             <aui:fieldset  markupView="lexicon">
                 <aui:input name="preferences--apiKey--" label="Define apiKey" value="${apiKey}"></aui:input>
             </aui:fieldset>
-
-
+            <aui:fieldset  markupView="lexicon">
+                <aui:input name="preferences--path--" label="Define path  in Document and Media Library" value="${path}"></aui:input>
+            </aui:fieldset>
         </div>
     </div>
 

@@ -55,8 +55,6 @@ import java.util.Map;
         service = MVCActionCommand.class
 )
 public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
-    //todo make this configurable
-    private String PATH = "/images/pexels";
 
     private volatile PexelImageFinderPortletConfiguration _configuration;
 
@@ -74,11 +72,12 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
         //todo only if it's a logged in user
 
         String apiKey = "";
+        String path = "";
         PortletPreferences preferences = actionRequest.getPreferences();
         if (Validator.isNotNull(preferences))
         {
             apiKey = GetterUtil.getString(preferences.getValue("apiKey","APIKEY_NOT_SET"));
-
+            path = GetterUtil.getString(preferences.getValue("path","/images/pexels"));
         }
 
         // first get info on remote asset
@@ -117,9 +116,9 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
 
         long folderID = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
 
-        String[] path = PATH.substring(1).split("/");
-        System.out.println(path.length);
-        for (String directory : path) {
+        String[] dirs = path.substring(1).split("/");
+        System.out.println(dirs.length);
+        for (String directory : dirs) {
             System.out.println("Create folder: " + directory);
             Folder folder = null;
             try {

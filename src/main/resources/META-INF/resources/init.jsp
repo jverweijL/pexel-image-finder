@@ -16,4 +16,6 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
     PexelImageFinderPortletConfiguration  portletInstanceConfiguration = portletDisplay.getPortletInstanceConfiguration(PexelImageFinderPortletConfiguration.class);
     String apiKey = portletInstanceConfiguration.apiKey();
     pageContext.setAttribute("apiKey",apiKey);
+    String path = portletInstanceConfiguration.path();
+    pageContext.setAttribute("path",path);
 %>

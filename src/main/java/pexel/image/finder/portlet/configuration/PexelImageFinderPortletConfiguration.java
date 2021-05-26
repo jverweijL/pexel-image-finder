@@ -14,4 +14,7 @@ public interface PexelImageFinderPortletConfiguration {
 
     @Meta.AD(deflt = "0", name = "api-key", required = false)
     public String apiKey();
+
+    @Meta.AD(deflt = "/images/pexels", name = "path", required = false)
+    public String path();
 }
