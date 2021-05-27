@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -141,7 +142,7 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
                 // see if file already exists
                 FileEntry f = DLAppServiceUtil.getFileEntry(themeDisplay.getScopeGroupId(), folderID, imgTitle);
                 fileExists = true;
-                SessionMessages.add(actionRequest, "entryExists");
+                SessionErrors.add(actionRequest, "entryExists");
             } catch (PortalException pe) {
 
             }
@@ -165,7 +166,7 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
                 }
             }
         } else {
-            SessionMessages.add(actionRequest, "signIn");
+            SessionErrors.add(actionRequest, "signIn");
         }
 
         //hideDefaultSuccessMessage(actionRequest);

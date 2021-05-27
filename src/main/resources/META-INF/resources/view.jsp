@@ -17,8 +17,8 @@
 <liferay-portlet:actionURL name="/pexel/search" var="search" />
 
 <liferay-ui:success key="entryAdded" message="entry-added" />
-<liferay-ui:success  key="entryExists"  message="entry-exists" />
-<liferay-ui:success  key="signIn"  message="signin" />
+<liferay-ui:error  key="entryExists"  message="entry-exists" />
+<liferay-ui:error  key="signIn"  message="signin" />
 
 <div class=pexel-searchbar">
 	<aui:form action="<%= search %>" method="post" name="fm">
