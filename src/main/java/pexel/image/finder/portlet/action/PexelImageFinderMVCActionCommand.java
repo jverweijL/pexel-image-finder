@@ -32,7 +32,6 @@ import java.net.URLEncoder;
 import java.util.*;
 
 @Component(
-        configurationPid = "pexel.image.finder.portlet.configuration.PexelImageFinderPortletConfiguration",
         immediate = true,
         property = {
                 "javax.portlet.name=" + PexelImageFinderPortletKeys.PEXELIMAGEFINDER,
