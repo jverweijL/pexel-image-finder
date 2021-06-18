@@ -1,14 +1,16 @@
 # Pexels Image Finder & Importer
 
-A basic description of my project.
-
-Developed to run on the following versions of Liferay and/or Commerce: `Liferay DXP 7.3`, `Commerce 2.1.1`, `etc`
+With this portlet you can quickly search for images using pexels.com api.
+If you click an image it will be downloaded/imported into the Document & Media Library.
+Developed to run on the following versions of Liferay: `Liferay DXP 7.3`
 
 Built with [Liferay Workspace](https://help.liferay.com/hc/en-us/articles/360029147471-Liferay-Workspace) and [Blade CLI](https://help.liferay.com/hc/en-us/articles/360029147071-Blade-CLI).
 
-*Include an image or gif that represents your project*
 
-![screenshot](https://placedog.net/500?id=12)
+
+![screenshot](img01.png)
+
+![screenshot](img03.png)
 
 ## How to Build and Deploy to Liferay
 
@@ -33,19 +35,15 @@ liferay.workspace.home.dir=/path/to/liferay/home
 
 ## Usage
 
-[Adding Widgets to a Page.](https://learn.liferay.com/dxp/7.x/en/site-building/creating-pages/using-widget-pages/adding-widgets-to-a-page.html)
-
-*Explain what's required to set up and make use of all of the projects features.*
+* [Get API key](https://www.pexels.com/api/new/)
+* Add widget PexelImageFinder to your page
+* Configure widget to use your API key
+* Enter path to store image in D&M Library, e.g. `/images/pexels`
+![screenshot](img02.png)
 
 ### Features
 
-* Feature One
-    * ![feature one](https://placedog.net/500?id=26)
-* Feature Two
-    * ![feature two](https://placedog.net/500?id=27)
-* Feature Three
-    * ![feature three](https://placedog.net/500?id=29)
-
-*Wherever possible, include more images or gifs that explain the features of your project.*
+* Search pexels.com for images
+* Download/import images directly into the Document & Media Library
 
 ## Issues & Questions Welcome

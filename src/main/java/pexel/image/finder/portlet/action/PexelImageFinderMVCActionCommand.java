@@ -80,7 +80,6 @@ public class PexelImageFinderMVCActionCommand extends BaseMVCActionCommand {
                 result.put(photo.get("id").asLong(-1),photo.get("src").get("small").asText(""));
             }
 
-
             actionRequest.setAttribute("result",result);
 
            _log.debug("the result is " + jsonResult);

@@ -74,7 +74,6 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
 
         if (themeDisplay.isSignedIn()) {
 
-
             String apiKey = "";
             String path = "";
             PortletPreferences preferences = actionRequest.getPreferences();
@@ -114,7 +113,6 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
                     .build();
 
             // first create required folder structure
-
             ServiceContext serviceContext = ServiceContextFactory.getInstance(DLFolder.class.getName(), actionRequest);
 
             long folderID = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
@@ -135,8 +133,6 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
             }
 
             // see if file exists already if not we add it otherwise we just show message file already exists
-            //if (DLAppServiceUtil.getFileEntry(themeDisplay.getScopeGroupId(), folderID,"123 bag") == null) {
-
             boolean fileExists = false;
             try {
                 // see if file already exists
@@ -168,8 +164,6 @@ public class PexelImageImportMVCActionCommand extends BaseMVCActionCommand {
         } else {
             SessionErrors.add(actionRequest, "signIn");
         }
-
-        //hideDefaultSuccessMessage(actionRequest);
     }
 
     private String getRequest(HttpUriRequest request) {
